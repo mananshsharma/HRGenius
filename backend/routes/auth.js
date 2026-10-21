@@ -1,3 +1,4 @@
+
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -13,108 +14,78 @@ const router = express.Router();
 // =========================================
 
 router.post("/register", async (req, res) => {
-
     try {
-
-        const {
-            name,
-            email,
-            password,
-            role
-        } = req.body;
-
+        const { name, email, password } = req.body;
 
         // Validate required fields
-        if (!name || !email || !password) {
-
+        if (
+            typeof name !== "string" ||
+            typeof email !== "string" ||
+            typeof password !== "string" ||
+            !name.trim() ||
+            !email.trim() ||
+            !password
+        ) {
             return res.status(400).json({
                 error: "Name, email and password are required"
             });
-
         }
-
 
         // Validate password length
         if (password.length < 6) {
-
             return res.status(400).json({
                 error: "Password must be at least 6 characters"
             });
-
         }
 
+        const normalizedEmail = email.trim().toLowerCase();
 
-        const normalizedEmail =
-            email.toLowerCase().trim();
-
-
-        // Check existing user
-        const existingUser =
-            await User.findOne({
-                email: normalizedEmail
-            });
-
+        // Check whether the user already exists
+        const existingUser = await User.findOne({
+            email: normalizedEmail
+        });
 
         if (existingUser) {
-
             return res.status(409).json({
                 error: "User with this email already exists"
             });
-
         }
 
-
-        // Create user
+        // Public registration cannot choose a privileged role
         const user = new User({
-
             name: name.trim(),
-
             email: normalizedEmail,
-
             password,
-
-            role: role || "Admin"
-
+            role: "HR Executive"
         });
 
+        const savedUser = await user.save();
 
-        const savedUser =
-            await user.save();
-
-
-        res.status(201).json({
-
+        return res.status(201).json({
             message: "User registered successfully",
-
             user: {
-
                 id: savedUser._id,
-
                 name: savedUser.name,
-
                 email: savedUser.email,
-
                 role: savedUser.role
-
             }
-
         });
 
     } catch (error) {
+        console.error("Registration error:", error.message);
 
-        console.error(
-            "Registration error:",
-            error
-        );
+        // Handle duplicate email race conditions
+        if (error.code === 11000) {
+            return res.status(409).json({
+                error: "User with this email already exists"
+            });
+        }
 
-        res.status(500).json({
+        return res.status(500).json({
             error: "Failed to register user"
         });
-
     }
-
 });
-
 
 
 // =========================================
@@ -123,122 +94,85 @@ router.post("/register", async (req, res) => {
 // =========================================
 
 router.post("/login", async (req, res) => {
-
     try {
+        const { email, password } = req.body;
 
-        const {
-            email,
-            password
-        } = req.body;
-
-
-        // Validate fields
-        if (!email || !password) {
-
+        if (
+            typeof email !== "string" ||
+            typeof password !== "string" ||
+            !email.trim() ||
+            !password
+        ) {
             return res.status(400).json({
                 error: "Email and password are required"
             });
-
         }
 
+        const normalizedEmail = email.trim().toLowerCase();
 
-        const normalizedEmail =
-            email.toLowerCase().trim();
+        const user = await User.findOne({
+            email: normalizedEmail
+        });
 
-
-        // Find user
-        const user =
-            await User.findOne({
-                email: normalizedEmail
-            });
-
-
+        // Use the same message for unknown email and wrong password
         if (!user) {
-
             return res.status(401).json({
                 error: "Invalid email or password"
             });
-
         }
 
-
-        // Compare password
-        const passwordMatch =
-            await bcrypt.compare(
-                password,
-                user.password
-            );
-
+        const passwordMatch = await bcrypt.compare(
+            password,
+            user.password
+        );
 
         if (!passwordMatch) {
-
             return res.status(401).json({
                 error: "Invalid email or password"
             });
-
         }
 
-
-        // Check JWT secret
         if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET is not configured");
 
             return res.status(500).json({
-                error: "JWT_SECRET is not configured"
+                error: "Authentication service is not configured"
             });
-
         }
 
-
-        // Create JWT token
-        const token =
-            jwt.sign(
-                {
-                    userId: user._id,
-                    email: user.email,
-                    role: user.role
-                },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn: "1d"
-                }
-            );
-
-
-        res.json({
-
-            message: "Login successful",
-
-            token,
-
-            user: {
-
-                id: user._id,
-
-                name: user.name,
-
+        // Create a token with a fixed expiration and algorithm
+        const token = jwt.sign(
+            {
+                userId: user._id.toString(),
                 email: user.email,
-
                 role: user.role
-
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "1d",
+                algorithm: "HS256"
             }
+        );
 
+        return res.json({
+            message: "Login successful",
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
         });
 
     } catch (error) {
+        console.error("Login error:", error.message);
 
-        console.error(
-            "Login error:",
-            error
-        );
-
-        res.status(500).json({
+        return res.status(500).json({
             error: "Login failed"
         });
-
     }
-
 });
-
 
 
 // =========================================
@@ -247,92 +181,58 @@ router.post("/login", async (req, res) => {
 // =========================================
 
 router.get("/me", async (req, res) => {
-
     try {
+        const authHeader = req.headers.authorization;
 
-        const authHeader =
-            req.headers.authorization;
-
-
-        if (!authHeader) {
-
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
             return res.status(401).json({
-                error: "Authorization token required"
+                error: "Authorization token required or invalid format"
             });
-
         }
 
-
-        // Expected format:
-        // Authorization: Bearer TOKEN
-
-        if (!authHeader.startsWith("Bearer ")) {
-
-            return res.status(401).json({
-                error: "Invalid authorization format"
-            });
-
-        }
-
-
-        const token =
-            authHeader.split(" ")[1];
-
+        const token = authHeader.slice(7).trim();
 
         if (!token) {
-
             return res.status(401).json({
                 error: "Token missing"
             });
-
         }
 
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET is not configured");
 
-        // Verify token
-        const decoded =
-            jwt.verify(
-                token,
-                process.env.JWT_SECRET
-            );
+            return res.status(500).json({
+                error: "Authentication service is not configured"
+            });
+        }
 
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET,
+            {
+                algorithms: ["HS256"]
+            }
+        );
 
-        // Find user
-        const user =
-            await User
-                .findById(decoded.userId)
-                .select("-password");
-
+        const user = await User.findById(decoded.userId)
+            .select("-password");
 
         if (!user) {
-
             return res.status(404).json({
                 error: "User not found"
             });
-
         }
 
-
-        res.json({
-
-            user
-
-        });
+        return res.json({ user });
 
     } catch (error) {
+        console.error("Auth verification error:", error.message);
 
-        console.error(
-            "Auth verification error:",
-            error.message
-        );
-
-        res.status(401).json({
+        return res.status(401).json({
             error: "Invalid or expired token"
         });
-
     }
-
 });
-
 
 
 // =========================================
@@ -341,16 +241,10 @@ router.get("/me", async (req, res) => {
 // =========================================
 
 router.post("/logout", (req, res) => {
-
-    res.json({
-
-        message:
-            "Logout successful. Remove the token from the client."
-
+    return res.json({
+        message: "Logout successful. Remove the token from the client."
     });
-
 });
-
 
 
 module.exports = router;
