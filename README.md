@@ -1,3 +1,6 @@
+
+[![HRGenius CI](https://github.com/mananshsharma/HRGenius/actions/workflows/ci.yml/badge.svg)](https://github.com/mananshsharma/HRGenius/actions/workflows/ci.yml)
+
 # HRGenius — Human Resource Management System
 
 HRGenius is a web-based Human Resource Management System (HRMS) developed as a college project. It aims to simplify common HR activities through a centralized interface.
