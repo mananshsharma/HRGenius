@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRGenius - Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <h1> HR<span>Genius</span></h1>
+                <p> HR Management System </p>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="#"
+                    class="nav-item active"
+                    id="dashboardNav"
+                    onclick="showDashboard(event)">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="employees.html"
+                    class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Employees</span>
+                </a>
+
+                <a href="#"
+                    class="nav-item"
+                    id="recruitmentNav"
+                    onclick="showRecruitment(event)">
+                    <span class="nav-icon">📄</span>
+                    <span>Recruitment</span>
+                </a>
+
+                <a href="#"
+                    class="nav-item"
+                    id="onboardingNav"
+                    onclick="showOnboarding(event)">
+                    <span class="nav-icon">🧑‍💼</span>
+                    <span>Onboarding</span>
+                </a>
+
+                <a href="#"
+                    class="nav-item"
+                    id="payrollNav"
+                    onclick="showPayroll(event)">
+                    <span class="nav-icon">💰</span>
+                    <span>Payroll</span>
+                </a>
+
+                <a href="#"
+                    class="nav-item"
+                    id="performanceNav"
+                    onclick="showPerformance(event)">
+                    <span class="nav-icon">⭐</span>
+                    <span>Performance</span>
+                </a>
+
+                <a href="#"
+                    class="nav-item"
+                    id="analyticsNav"
+                    onclick="showAnalytics(event)">
+                    <span class="nav-icon">📈</span>
+                    <span>Analytics</span>
+                </a>
+
+                <a href="index.html"
+                    class="nav-item logout"
+                    onclick="logout()">
+                    <span class="nav-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN CONTENT
+        ========================== -->
+        <main class="main-content">
+
+
+            <!-- =========================
+                 DASHBOARD
+            ========================== -->
+            <div id="dashboardContent">
+
+                <header class="top-header">
+
+                    <div>
+                        <h2>Dashboard</h2>
+                        <p>Welcome back, Admin 👋</p>
+                    </div>
+
+                    <div class="profile">
+
+                        <div class="profile-text">
+                            <strong>Admin</strong>
+                            <small>HR Manager</small>
+                        </div>
+
+                        <div class="profile-avatar">
+                            A
+                        </div>
+
+                    </div>
+
+                </header>
+
+
+                <!-- =========================
+                     DASHBOARD STAT CARDS
+                ========================== -->
+                <section class="stats-grid">
+
+                    <!-- Total Employees -->
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            👥
+                        </div>
+
+                        <p>Total Employees</p>
+
+                        <h3 id="dashboardTotalEmployees">
+                            0
+                        </h3>
+
+                        <span class="positive">
+                            Live data
+                        </span>
+
+                    </div>
+
+
+                    <!-- New Hires -->
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            🧑‍💼
+                        </div>
+
+                        <p>New Hires</p>
+
+                        <h3 id="dashboardNewHires">
+                            0
+                        </h3>
+
+                        <span
+                            id="dashboardNewHiresMeta"
+                            class="positive">
+                            Current month
+                        </span>
+
+                    </div>
+
+
+                    <!-- Monthly Payroll -->
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            💰
+                        </div>
+
+                        <p>Monthly Payroll</p>
+
+                        <h3 id="dashboardMonthlyPayroll">
+                            ₹0
+                        </h3>
+
+                        <span class="positive">
+                            Current month
+                        </span>
+
+                    </div>
+
+
+                    <!-- On Leave -->
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            🏖️
+                        </div>
+
+                        <p>On Leave</p>
+
+                        <h3 id="dashboardOnLeave">
+                            0
+                        </h3>
+
+                        <span class="positive">
+                            Current status
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =========================
+                     DASHBOARD GRID
+                ========================== -->
+                <section class="dashboard-grid">
+
+
+                    <!-- Employee Overview -->
+                    <div class="dashboard-card">
+
+                        <div class="card-header">
+
+                            <div>
+
+                                <h3>
+                                    Employee Overview
+                                </h3>
+
+                                <p>
+                                    Employee distribution by department
+                                </p>
+
+                            </div>
+
+                            <select id="yearFilter">
+
+                                <option>
+                                    This Year
+                                </option>
+
+                                <option>
+                                    Last Year
+                                </option>
+
+                                <option>
+                                    2024
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Dynamic department counts -->
+                        <div class="department-list">
+
+                            <div class="department">
+                                <span>💻 IT</span>
+                                <strong id="departmentIT">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="department">
+                                <span>👥 HR</span>
+                                <strong id="departmentHR">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="department">
+                                <span>💼 Sales</span>
+                                <strong id="departmentSales">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="department">
+                                <span>💰 Finance</span>
+                                <strong id="departmentFinance">
+                                    0
+                                </strong>
+                            </div>
+
+                            <div class="department">
+                                <span>📢 Marketing</span>
+                                <strong id="departmentMarketing">
+                                    0
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Quick Actions -->
+                    <div class="dashboard-card">
+
+                        <h3>
+                            Quick Actions
+                        </h3>
+
+                        <div class="quick-actions">
+
+                            <button onclick="addEmployee()">
+                                ➕ Add Employee
+                            </button>
+
+                            <button
+                                onclick="showRecruitment(null); setTimeout(openJobModal,100)">
+                                📄 Create Job
+                            </button>
+
+                            <button
+                                onclick="showPayroll(null); setTimeout(openPayrollModal,100)">
+                                💰 Process Payroll
+                            </button>
+
+                            <button
+                                onclick="showAnalytics(null)">
+                                📊 View Reports
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- =========================
+                 RECRUITMENT
+            ========================== -->
+            <section
+                id="recruitmentSection"
+                class="recruitment-section"
+                style="display:none;">
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h2>
+                            Recruitment
+                        </h2>
+
+                        <p>
+                            Manage job openings and candidates
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openJobModal()">
+                        + Create Job
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📄
+                        </div>
+
+                        <p>
+                            Open Jobs
+                        </p>
+
+                        <h3 id="openJobsCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            👤
+                        </div>
+
+                        <p>
+                            Candidates
+                        </p>
+
+                        <h3 id="candidateCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⭐
+                        </div>
+
+                        <p>
+                            Shortlisted
+                        </p>
+
+                        <h3 id="shortlistedCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✅
+                        </div>
+
+                        <p>
+                            Hired
+                        </p>
+
+                        <h3 id="hiredCount">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Job Openings -->
+                <div class="recruitment-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Job Openings
+                            </h3>
+
+                            <p>
+                                Manage available positions
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="jobList"
+                        class="recruitment-list">
+                    </div>
+
+                </div>
+
+
+                <!-- Candidates -->
+                <div class="recruitment-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Candidates
+                            </h3>
+
+                            <p>
+                                Track candidate progress
+                            </p>
+
+                        </div>
+
+                        <button
+                            class="primary-btn"
+                            onclick="openCandidateModal()">
+                            + Add Candidate
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="candidateList"
+                        class="recruitment-list">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 ONBOARDING
+            ========================== -->
+            <section
+                id="onboardingSection"
+                class="onboarding-section"
+                style="display:none;">
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h2>
+                            Onboarding
+                        </h2>
+
+                        <p>
+                            Manage employee onboarding processes
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openOnboardingModal()">
+                        + Start Onboarding
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            👥
+                        </div>
+
+                        <p>
+                            Total Onboarding
+                        </p>
+
+                        <h3 id="totalOnboardingCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            🔄
+                        </div>
+
+                        <p>
+                            In Progress
+                        </p>
+
+                        <h3 id="onboardingProgressCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✅
+                        </div>
+
+                        <p>
+                            Completed
+                        </p>
+
+                        <h3 id="onboardingCompletedCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            Pending
+                        </p>
+
+                        <h3 id="onboardingPendingCount">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="onboarding-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Onboarding Records
+                            </h3>
+
+                            <p>
+                                Track new employee onboarding
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="onboardingList"
+                        class="onboarding-list">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 PAYROLL
+            ========================== -->
+            <section
+                id="payrollSection"
+                class="payroll-section"
+                style="display:none;">
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h2>
+                            Payroll
+                        </h2>
+
+                        <p>
+                            Manage employee salary and payroll records
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openPayrollModal()">
+                        + Process Payroll
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            💰
+                        </div>
+
+                        <p>
+                            Total Payroll
+                        </p>
+
+                        <h3 id="totalPayrollAmount">
+                            ₹0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✅
+                        </div>
+
+                        <p>
+                            Processed
+                        </p>
+
+                        <h3 id="processedPayrollCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⏳
+                        </div>
+
+                        <p>
+                            Pending
+                        </p>
+
+                        <h3 id="pendingPayrollCount">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📄
+                        </div>
+
+                        <p>
+                            Payroll Records
+                        </p>
+
+                        <h3 id="payrollRecordCount">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="payroll-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Payroll History
+                            </h3>
+
+                            <p>
+                                View and manage salary records
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="payrollList"
+                        class="payroll-list">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 PERFORMANCE
+            ========================== -->
+            <section
+                id="performanceSection"
+                class="performance-section"
+                style="display:none;">
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h2>
+                            Performance Management
+                        </h2>
+
+                        <p>
+                            Track employee reviews, goals and progress
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        onclick="openPerformanceModal()">
+                        + Add Review
+                    </button>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            📋
+                        </div>
+
+                        <p>
+                            Total Reviews
+                        </p>
+
+                        <h3 id="totalPerformanceReviews">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⭐
+                        </div>
+
+                        <p>
+                            Average Rating
+                        </p>
+
+                        <h3 id="averagePerformanceRating">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ✅
+                        </div>
+
+                        <p>
+                            Goals Completed
+                        </p>
+
+                        <h3 id="completedPerformanceGoals">
+                            0
+                        </h3>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            🔄
+                        </div>
+
+                        <p>
+                            In Progress
+                        </p>
+
+                        <h3 id="progressPerformanceGoals">
+                            0
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="performance-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3>
+                                Performance Reviews
+                            </h3>
+
+                            <p>
+                                Employee performance and goals
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="performanceList"
+                        class="performance-list">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 ANALYTICS
+            ========================== -->
+            <section
+                id="analyticsSection"
+                class="analytics-section"
+                style="display:none;">
+
+                <div class="page-header">
+
+                    <div>
+
+                        <h2>
+                            Analytics & Reports
+                        </h2>
+
+                        <p>
+                            Monitor important HR metrics and organization performance
+                        </p>
+
+                    </div>
+
+
+                    <div class="analytics-filter-box">
+
+                        <label for="analyticsYear">
+                            Period
+                        </label>
+
+                        <select
+                            id="analyticsYear"
+                            onchange="displayAnalytics()">
+
+                            <option value="all">
+                                All Time
+                            </option>
+
+                            <option value="2026">
+                                2026
+                            </option>
+
+                            <option value="2025">
+                                2025
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Analytics Stats -->
+                <div class="analytics-stats-grid">
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            👥
+                        </div>
+
+                        <div>
+
+                            <p>
+                                Total Employees
+                            </p>
+
+                            <h3 id="analyticsEmployees">
+                                0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            🧑‍💼
+                        </div>
+
+                        <div>
+
+                            <p>
+                                New Hires
+                            </p>
+
+                            <h3 id="analyticsNewHires">
+                                0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            📄
+                        </div>
+
+                        <div>
+
+                            <p>
+                                Open Jobs
+                            </p>
+
+                            <h3 id="analyticsOpenJobs">
+                                0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            💰
+                        </div>
+
+                        <div>
+
+                            <p>
+                                Total Payroll
+                            </p>
+
+                            <h3 id="analyticsPayroll">
+                                ₹0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            ⭐
+                        </div>
+
+                        <div>
+
+                            <p>
+                                Average Rating
+                            </p>
+
+                            <h3 id="analyticsRating">
+                                0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-stat-card">
+
+                        <div class="analytics-stat-icon">
+                            ✅
+                        </div>
+
+                        <div>
+
+                            <p>
+                                Completed Goals
+                            </p>
+
+                            <h3 id="analyticsGoals">
+                                0
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Department Analytics -->
+                <div class="analytics-card">
+
+                    <div class="analytics-card-header">
+
+                        <div>
+
+                            <h3>
+                                Employee Distribution by Department
+                            </h3>
+
+                            <p>
+                                Current employee distribution across departments
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="departmentAnalytics"
+                        class="analytics-bars">
+                    </div>
+
+                </div>
+
+
+                <!-- Recruitment + Onboarding -->
+                <div class="analytics-two-column">
+
+
+                    <!-- Recruitment -->
+                    <div class="analytics-card">
+
+                        <div class="analytics-card-header">
+
+                            <div>
+
+                                <h3>
+                                    Recruitment Overview
+                                </h3>
+
+                                <p>
+                                    Candidate hiring pipeline
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="analytics-funnel">
+
+                            <div class="funnel-item">
+
+                                <span>
+                                    Applied
+                                </span>
+
+                                <strong id="analyticsApplied">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="funnel-item">
+
+                                <span>
+                                    Shortlisted
+                                </span>
+
+                                <strong id="analyticsShortlisted">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="funnel-item">
+
+                                <span>
+                                    Interview
+                                </span>
+
+                                <strong id="analyticsInterview">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="funnel-item">
+
+                                <span>
+                                    Hired
+                                </span>
+
+                                <strong id="analyticsHired">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="funnel-item">
+
+                                <span>
+                                    Rejected
+                                </span>
+
+                                <strong id="analyticsRejected">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Onboarding -->
+                    <div class="analytics-card">
+
+                        <div class="analytics-card-header">
+
+                            <div>
+
+                                <h3>
+                                    Onboarding Overview
+                                </h3>
+
+                                <p>
+                                    Employee onboarding progress
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="analytics-onboarding">
+
+
+                            <div class="analytics-progress-row">
+
+                                <div>
+
+                                    <span>
+                                        Completed
+                                    </span>
+
+                                    <strong
+                                        id="analyticsOnboardingCompleted">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                                <div class="analytics-progress">
+
+                                    <div
+                                        id="onboardingCompletedBar"
+                                        class="analytics-progress-fill"
+                                        style="width:0%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="analytics-progress-row">
+
+                                <div>
+
+                                    <span>
+                                        In Progress
+                                    </span>
+
+                                    <strong
+                                        id="analyticsOnboardingProgress">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                                <div class="analytics-progress">
+
+                                    <div
+                                        id="onboardingProgressBar"
+                                        class="analytics-progress-fill"
+                                        style="width:0%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="analytics-progress-row">
+
+                                <div>
+
+                                    <span>
+                                        Pending
+                                    </span>
+
+                                    <strong
+                                        id="analyticsOnboardingPending">
+                                        0
+                                    </strong>
+
+                                </div>
+
+                                <div class="analytics-progress">
+
+                                    <div
+                                        id="onboardingPendingBar"
+                                        class="analytics-progress-fill"
+                                        style="width:0%;">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Payroll + Performance -->
+                <div class="analytics-two-column">
+
+
+                    <!-- Payroll -->
+                    <div class="analytics-card">
+
+                        <div class="analytics-card-header">
+
+                            <div>
+
+                                <h3>
+                                    Payroll Analysis
+                                </h3>
+
+                                <p>
+                                    Salary and payroll processing summary
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="analytics-payroll">
+
+                            <div class="payroll-summary-row">
+
+                                <span>
+                                    Total Records
+                                </span>
+
+                                <strong id="analyticsPayrollRecords">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="payroll-summary-row">
+
+                                <span>
+                                    Processed
+                                </span>
+
+                                <strong id="analyticsPayrollProcessed">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="payroll-summary-row">
+
+                                <span>
+                                    Pending
+                                </span>
+
+                                <strong id="analyticsPayrollPending">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="payroll-summary-row highlight">
+
+                                <span>
+                                    Net Payroll
+                                </span>
+
+                                <strong id="analyticsNetPayroll">
+                                    ₹0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Performance -->
+                    <div class="analytics-card">
+
+                        <div class="analytics-card-header">
+
+                            <div>
+
+                                <h3>
+                                    Performance Analysis
+                                </h3>
+
+                                <p>
+                                    Employee review and goal progress
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="analytics-performance">
+
+                            <div class="performance-summary-row">
+
+                                <span>
+                                    Total Reviews
+                                </span>
+
+                                <strong id="analyticsReviews">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="performance-summary-row">
+
+                                <span>
+                                    Average Rating
+                                </span>
+
+                                <strong id="analyticsAvgRating">
+                                    0 / 5
+                                </strong>
+
+                            </div>
+
+
+                            <div class="performance-summary-row">
+
+                                <span>
+                                    Completed Goals
+                                </span>
+
+                                <strong id="analyticsCompletedGoals">
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div class="performance-summary-row">
+
+                                <span>
+                                    Goals In Progress
+                                </span>
+
+                                <strong id="analyticsProgressGoals">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- HR Report Summary -->
+                <div class="analytics-card">
+
+                    <div class="analytics-card-header">
+
+                        <div>
+
+                            <h3>
+                                HR Report Summary
+                            </h3>
+
+                            <p>
+                                Overall organization health indicators
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="report-summary-grid">
+
+
+                        <div class="report-summary-item">
+
+                            <span class="report-icon">
+                                👥
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Workforce
+                                </strong>
+
+                                <p id="workforceSummary">
+                                    Loading...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="report-summary-item">
+
+                            <span class="report-icon">
+                                📄
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Recruitment
+                                </strong>
+
+                                <p id="recruitmentSummary">
+                                    Loading...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="report-summary-item">
+
+                            <span class="report-icon">
+                                💰
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Payroll
+                                </strong>
+
+                                <p id="payrollSummary">
+                                    Loading...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="report-summary-item">
+
+                            <span class="report-icon">
+                                ⭐
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Performance
+                                </strong>
+
+                                <p id="performanceSummary">
+                                    Loading...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- =========================
+             CREATE JOB MODAL
+        ========================== -->
+        <div class="modal" id="jobModal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Create Job
+                        </h2>
+
+                        <p>
+                            Add a new job opening
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="close-btn"
+                        onclick="closeJobModal()">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="jobForm"
+                    onsubmit="event.preventDefault(); addJob();">
+
+                    <div class="form-group">
+
+                        <label>
+                            Job Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="jobTitle"
+                            placeholder="e.g. Software Engineer"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Department
+                            </label>
+
+                            <select
+                                id="jobDepartment"
+                                required>
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                                <option value="IT">
+                                    IT
+                                </option>
+
+                                <option value="HR">
+                                    HR
+                                </option>
+
+                                <option value="Finance">
+                                    Finance
+                                </option>
+
+                                <option value="Sales">
+                                    Sales
+                                </option>
+
+                                <option value="Marketing">
+                                    Marketing
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Openings
+                            </label>
+
+                            <input
+                                type="number"
+                                id="jobOpenings"
+                                min="1"
+                                value="1"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Skills / Requirements
+                        </label>
+
+                        <textarea
+                            id="jobSkills"
+                            placeholder="e.g. JavaScript, HTML, CSS"
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="jobStatus">
+
+                            <option value="Open">
+                                Open
+                            </option>
+
+                            <option value="Closed">
+                                Closed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="closeJobModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+                            Create Job
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ADD CANDIDATE MODAL
+        ========================== -->
+        <div class="modal" id="candidateModal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Add Candidate
+                        </h2>
+
+                        <p>
+                            Add a candidate to the recruitment pipeline
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="close-btn"
+                        onclick="closeCandidateModal()">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="candidateForm"
+                    onsubmit="event.preventDefault(); addCandidate();">
+
+                    <div class="form-group">
+
+                        <label>
+                            Candidate Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="candidateName"
+                            placeholder="e.g. Rahul Kumar"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Position
+                        </label>
+
+                        <input
+                            type="text"
+                            id="candidatePosition"
+                            placeholder="e.g. Software Engineer"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="candidateStatus">
+
+                            <option value="Applied">
+                                Applied
+                            </option>
+
+                            <option value="Shortlisted">
+                                Shortlisted
+                            </option>
+
+                            <option value="Interview">
+                                Interview
+                            </option>
+
+                            <option value="Hired">
+                                Hired
+                            </option>
+
+                            <option value="Rejected">
+                                Rejected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="closeCandidateModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+                            Add Candidate
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             ONBOARDING MODAL
+        ========================== -->
+        <div class="modal" id="onboardingModal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Start Onboarding
+                        </h2>
+
+                        <p>
+                            Create an onboarding process
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="close-btn"
+                        onclick="closeOnboardingModal()">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="onboardingForm"
+                    onsubmit="event.preventDefault(); addOnboarding();">
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="onboardingEmployee"
+                            placeholder="Enter employee name"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Joining Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="joiningDate"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Department
+                            </label>
+
+                            <select
+                                id="onboardingDepartment"
+                                required>
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                                <option value="IT">
+                                    IT
+                                </option>
+
+                                <option value="HR">
+                                    HR
+                                </option>
+
+                                <option value="Finance">
+                                    Finance
+                                </option>
+
+                                <option value="Sales">
+                                    Sales
+                                </option>
+
+                                <option value="Marketing">
+                                    Marketing
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Required Documents
+                        </label>
+
+                        <textarea
+                            id="onboardingDocuments"
+                            placeholder="e.g. ID Proof, Resume, Certificates"
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Onboarding Tasks
+                        </label>
+
+                        <textarea
+                            id="onboardingTasks"
+                            placeholder="e.g. Account Setup, Training"
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="onboardingStatus">
+
+                            <option value="Pending">
+                                Pending
+                            </option>
+
+                            <option value="In Progress">
+                                In Progress
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="closeOnboardingModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+                            Start Onboarding
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PAYROLL MODAL
+        ========================== -->
+        <div class="modal" id="payrollModal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Process Payroll
+                        </h2>
+
+                        <p>
+                            Add employee payroll record
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="close-btn"
+                        onclick="closePayrollModal()">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="payrollForm"
+                    onsubmit="event.preventDefault(); addPayroll();">
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="payrollEmployee"
+                            placeholder="Enter employee name"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Payroll Month
+                        </label>
+
+                        <input
+                            type="month"
+                            id="payrollMonth"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Basic Salary
+                            </label>
+
+                            <input
+                                type="number"
+                                id="basicSalary"
+                                min="0"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Allowances
+                            </label>
+
+                            <input
+                                type="number"
+                                id="allowances"
+                                min="0"
+                                value="0"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Deductions
+                            </label>
+
+                            <input
+                                type="number"
+                                id="deductions"
+                                min="0"
+                                value="0"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Status
+                            </label>
+
+                            <select id="payrollStatus">
+
+                                <option value="Pending">
+                                    Pending
+                                </option>
+
+                                <option value="Processed">
+                                    Processed
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="closePayrollModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+                            Process Payroll
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             PERFORMANCE MODAL
+        ========================== -->
+        <div class="modal" id="performanceModal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h2>
+                            Add Performance Review
+                        </h2>
+
+                        <p>
+                            Record employee performance
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="close-btn"
+                        onclick="closePerformanceModal()">
+                        ×
+                    </button>
+
+                </div>
+
+
+                <form
+                    id="performanceForm"
+                    onsubmit="event.preventDefault(); addPerformanceReview();">
+
+                    <div class="form-group">
+
+                        <label>
+                            Employee Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="performanceEmployee"
+                            placeholder="Enter employee name"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Review Period
+                            </label>
+
+                            <input
+                                type="text"
+                                id="reviewPeriod"
+                                placeholder="e.g. Q3 2026"
+                                required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Rating
+                            </label>
+
+                            <select
+                                id="performanceRating"
+                                required>
+
+                                <option value="">
+                                    Select Rating
+                                </option>
+
+                                <option value="1">
+                                    1 - Poor
+                                </option>
+
+                                <option value="2">
+                                    2 - Needs Improvement
+                                </option>
+
+                                <option value="3">
+                                    3 - Meets Expectations
+                                </option>
+
+                                <option value="4">
+                                    4 - Very Good
+                                </option>
+
+                                <option value="5">
+                                    5 - Excellent
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Goal
+                        </label>
+
+                        <input
+                            type="text"
+                            id="performanceGoal"
+                            placeholder="Enter performance goal"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Goal Progress (%)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="goalProgress"
+                            min="0"
+                            max="100"
+                            value="0"
+                            required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Feedback
+                        </label>
+
+                        <textarea
+                            id="performanceFeedback"
+                            placeholder="Enter feedback"
+                            required></textarea>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="performanceStatus">
+
+                            <option value="In Progress">
+                                In Progress
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="secondary-btn"
+                            onclick="closePerformanceModal()">
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="primary-btn">
+                            Add Review
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         DASHBOARD JAVASCRIPT
+    ========================== -->
+    <script src="../js/dashboard.js"></script>
+
+</body>
+
+</html>

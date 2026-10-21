@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employees - HRGenius</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <h1>HR<span>Genius</span></h1>
+                <p>HR Management System</p>
+            </div>
+
+            <nav class="sidebar-nav">
+
+                <a href="dashboard.html">
+                    📊 Dashboard
+                </a>
+
+                <a href="employees.html" class="active">
+                    👥 Employees
+                </a>
+
+                <a href="#">
+                    📄 Recruitment
+                </a>
+
+                <a href="#">
+                    🧑‍💼 Onboarding
+                </a>
+
+                <a href="#">
+                    💰 Payroll
+                </a>
+
+                <a href="#">
+                    ⭐ Performance
+                </a>
+
+                <a href="#">
+                    📈 Analytics
+                </a>
+
+                <a href="index.html" class="logout-link">
+                    🚪 Logout
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <div>
+                    <h2>Employees</h2>
+
+                    <p>
+                        Manage all employees in the organization
+                    </p>
+                </div>
+
+                <button
+                    class="primary-btn"
+                    onclick="openEmployeeModal()"
+                >
+                    + Add Employee
+                </button>
+
+            </div>
+
+
+            <!-- CONTROLS -->
+            <div class="employee-controls">
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="employeeSearch"
+                        placeholder="🔍 Search employees..."
+                    >
+
+                </div>
+
+
+                <select id="departmentFilter">
+
+                    <option value="All">
+                        All Departments
+                    </option>
+
+                    <option value="IT">
+                        IT
+                    </option>
+
+                    <option value="HR">
+                        HR
+                    </option>
+
+                    <option value="Finance">
+                        Finance
+                    </option>
+
+                    <option value="Sales">
+                        Sales
+                    </option>
+
+                    <option value="Marketing">
+                        Marketing
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- EMPLOYEE TABLE -->
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+                        <h3>Employee Directory</h3>
+
+                        <p>
+                            View and manage organization employees
+                        </p>
+                    </div>
+
+                    <span
+                        class="employee-count"
+                        id="employeeCount"
+                    >
+                        0 Employees
+                    </span>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Name</th>
+
+                                <th>Email</th>
+
+                                <th>Department</th>
+
+                                <th>Position</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="employeeTableBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <!-- ADD EMPLOYEE MODAL -->
+
+    <div
+        class="modal"
+        id="employeeModal"
+    >
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2>Add Employee</h2>
+
+                    <p>
+                        Enter employee information
+                    </p>
+
+                </div>
+
+                <button
+                    class="close-btn"
+                    onclick="closeEmployeeModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                id="employeeForm"
+                onsubmit="event.preventDefault(); addEmployee();"
+            >
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employeeName"
+                        placeholder="Enter employee name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="employeeEmail"
+                        placeholder="Enter employee email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Department
+                        </label>
+
+                        <select
+                            id="employeeDepartment"
+                            required
+                        >
+
+                            <option value="">
+                                Select Department
+                            </option>
+
+                            <option value="IT">
+                                IT
+                            </option>
+
+                            <option value="HR">
+                                HR
+                            </option>
+
+                            <option value="Finance">
+                                Finance
+                            </option>
+
+                            <option value="Sales">
+                                Sales
+                            </option>
+
+                            <option value="Marketing">
+                                Marketing
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Position
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employeePosition"
+                            placeholder="e.g. Software Engineer"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="employeeStatus">
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="On Leave">
+                            On Leave
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        onclick="closeEmployeeModal()"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Add Employee
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="../js/employees.js"></script>
+
+</body>
+
+</html>
