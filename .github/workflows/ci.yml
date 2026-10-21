@@ -1,0 +1,31 @@
+
+name: HRGenius CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-check:
+    name: Check Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Check JavaScript syntax
+        run: |
+          find . -type f -name "*.js" -not -path "./node_modules/*" -print0 | xargs -0 -r -n1 node --check
+        working-directory: backend

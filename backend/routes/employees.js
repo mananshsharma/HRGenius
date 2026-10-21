@@ -1,142 +1,141 @@
+
 const express = require("express");
+const mongoose = require("mongoose");
 const Employee = require("../models/Employee");
 
 const router = express.Router();
 
+// Allow only the specified roles
+function allowRoles(...roles) {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({
+                message: "You do not have permission to perform this action"
+            });
+        }
 
-// ===============================
-// GET ALL EMPLOYEES
-// ===============================
+        next();
+    };
+}
 
-router.get("/", async (req, res) => {
+// Only accept approved employee fields
+function getEmployeeFields(body) {
+    const fields = {};
 
-    try {
+    const allowedFields = [
+        "employeeId",
+        "name",
+        "email",
+        "department",
+        "position",
+        "status"
+    ];
 
-        const employees = await Employee.find();
-
-        res.json(employees);
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: "Failed to fetch employees",
-            error: error.message
-        });
-
+    for (const field of allowedFields) {
+        if (body[field] !== undefined) {
+            fields[field] = body[field];
+        }
     }
 
+    return fields;
+}
+
+// GET: View all employees (HR Executive and Admin)
+router.get("/", async (req, res) => {
+    try {
+        const employees = await Employee.find();
+        res.json(employees);
+    } catch (error) {
+        console.error("Failed to fetch employees:", error.message);
+        res.status(500).json({ message: "Failed to fetch employees" });
+    }
 });
 
-
-// ===============================
-// ADD EMPLOYEE
-// ===============================
-
+// POST: Add an employee (HR Executive and Admin)
 router.post("/", async (req, res) => {
-
     try {
+        const fields = getEmployeeFields(req.body);
 
-        const employee = new Employee({
-            employeeId: req.body.employeeId,
-            name: req.body.name,
-            email: req.body.email,
-            department: req.body.department,
-            position: req.body.position,
-            status: req.body.status
-        });
+        if (
+            !fields.employeeId ||
+            !fields.name ||
+            !fields.email
+        ) {
+            return res.status(400).json({
+                message: "Employee ID, name, and email are required"
+            });
+        }
 
-        const savedEmployee =
-            await employee.save();
+        const employee = new Employee(fields);
+        const savedEmployee = await employee.save();
 
         res.status(201).json(savedEmployee);
-
     } catch (error) {
-
-        res.status(400).json({
-            message: "Failed to add employee",
-            error: error.message
-        });
-
+        console.error("Failed to add employee:", error.message);
+        res.status(400).json({ message: "Failed to add employee" });
     }
-
 });
 
-
-// ===============================
-// UPDATE EMPLOYEE
-// ===============================
-
+// PUT: Update an employee (HR Executive and Admin)
 router.put("/:id", async (req, res) => {
-
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({
+                message: "Invalid employee ID"
+            });
+        }
 
-        const updatedEmployee =
-            await Employee.findByIdAndUpdate(
-                req.params.id,
-                req.body,
-                {
-                    new: true,
-                    runValidators: true
-                }
-            );
+        const fields = getEmployeeFields(req.body);
+
+        if (Object.keys(fields).length === 0) {
+            return res.status(400).json({
+                message: "No valid employee fields provided"
+            });
+        }
+
+        const updatedEmployee = await Employee.findByIdAndUpdate(
+            req.params.id,
+            { $set: fields },
+            { new: true, runValidators: true }
+        );
 
         if (!updatedEmployee) {
-
             return res.status(404).json({
                 message: "Employee not found"
             });
-
         }
 
         res.json(updatedEmployee);
-
     } catch (error) {
-
-        res.status(400).json({
-            message: "Failed to update employee",
-            error: error.message
-        });
-
+        console.error("Failed to update employee:", error.message);
+        res.status(400).json({ message: "Failed to update employee" });
     }
-
 });
 
-
-// ===============================
-// DELETE EMPLOYEE
-// ===============================
-
-router.delete("/:id", async (req, res) => {
-
+// DELETE: Only Admin can delete employees
+router.delete("/:id", allowRoles("Admin"), async (req, res) => {
     try {
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).json({
+                message: "Invalid employee ID"
+            });
+        }
 
-        const deletedEmployee =
-            await Employee.findByIdAndDelete(
-                req.params.id
-            );
+        const deletedEmployee = await Employee.findByIdAndDelete(
+            req.params.id
+        );
 
         if (!deletedEmployee) {
-
             return res.status(404).json({
                 message: "Employee not found"
             });
-
         }
 
-        res.json({
-            message: "Employee deleted successfully"
-        });
-
+        res.json({ message: "Employee deleted successfully" });
     } catch (error) {
-
-        res.status(500).json({
-            message: "Failed to delete employee",
-            error: error.message
-        });
-
+        console.error("Failed to delete employee:", error.message);
+        res.status(500).json({ message: "Failed to delete employee" });
     }
-
 });
-
 
 module.exports = router;
