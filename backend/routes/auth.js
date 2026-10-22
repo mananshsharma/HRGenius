@@ -16,7 +16,6 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        // Validate required fields
         if (
             typeof name !== "string" ||
             typeof email !== "string" ||
@@ -30,7 +29,6 @@ router.post("/register", async (req, res) => {
             });
         }
 
-        // Validate password length
         if (password.length < 6) {
             return res.status(400).json({
                 error: "Password must be at least 6 characters"
@@ -39,7 +37,6 @@ router.post("/register", async (req, res) => {
 
         const normalizedEmail = email.trim().toLowerCase();
 
-        // Check whether the email already exists
         const existingUser = await User.findOne({
             email: normalizedEmail
         });
@@ -73,6 +70,7 @@ router.post("/register", async (req, res) => {
     } catch (error) {
         console.error("Registration error:", error.message);
 
+        // Handle duplicate email race conditions
         if (error.code === 11000) {
             return res.status(409).json({
                 error: "User with this email already exists"
