@@ -3,32 +3,39 @@
 
 # HRGenius — Human Resource Management System
 
-HRGenius is a web-based Human Resource Management System (HRMS) developed as a college project. It provides a centralized interface for managing common human resource activities, helping simplify employee administration and recruitment workflows.
+HRGenius is a web-based Human Resource Management System (HRMS) developed as a college project. It provides a centralized platform for managing employee information, recruitment, onboarding, payroll, performance records, and HR analytics.
+
+The project uses a web frontend, a Node.js and Express backend, and MongoDB Atlas for database integration. The source code is maintained on GitHub, with GitHub Actions configured for continuous integration and Vercel used for deployment.
 
 ## Features
 
-- **User Authentication:** Secure login using JSON Web Tokens (JWT).
+- **User Authentication:** Login and authentication using JSON Web Tokens (JWT).
 - **Employee Management:** Manage employee records and information.
 - **Recruitment Management:** Manage job openings and candidate records.
 - **Employee Onboarding:** Organize employee onboarding information.
-- **Payroll Management:** Manage payroll records.
-- **Performance Management:** Maintain employee performance information.
+- **Payroll Management:** Maintain payroll records.
+- **Performance Management:** Manage employee performance information.
 - **HR Analytics:** Display HR-related statistics and visualizations.
+- **Database Integration:** Connect the backend to MongoDB Atlas.
+- **Deployment:** Deploy the web application components using Vercel.
+- **Continuous Integration:** Run automated checks through GitHub Actions.
 
 ## Technology Stack
 
-- **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB Atlas
-- **Authentication:** JSON Web Tokens (JWT)
-- **Version Control:** Git and GitHub
-- **Continuous Integration:** GitHub Actions
-- **Frontend Hosting:** Vercel
+| Component | Technology |
+|---|---|
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas |
+| Authentication | JSON Web Tokens (JWT) |
+| Version Control | Git and GitHub |
+| CI/CD Checks | GitHub Actions |
+| Hosting | Vercel |
 
 ## Project Structure
 
 ```text
-HrGenius/
+HRGenius/
 ├── backend/
 │   ├── middleware/
 │   ├── models/
@@ -43,35 +50,21 @@ HrGenius/
 └── README.md
 ```
 
-*Note: The folders and files shown above represent the main project structure; individual files may vary.*
+*The structure above shows the main project directories. Individual files may vary.*
 
-## Prerequisites
+## Deployment
 
-Before running HRGenius locally, install:
+### Backend
 
-- [Node.js and npm](https://nodejs.org/)
-- A MongoDB Atlas account and database
-- [Git](https://git-scm.com/) (optional if downloading the repository as a ZIP)
+The HRGenius backend has been deployed to Vercel.
 
-## Getting Started
+**Backend URL:** https://hrgenius-backend.vercel.app
 
-### 1. Clone the Repository
+The backend provides the Express API and requires the appropriate environment variables and a successful MongoDB Atlas connection for database-dependent operations.
 
-```bash
-git clone https://github.com/mananshsharma/HRGenius.git
-cd HRGenius
-```
+### Database
 
-### 2. Configure the Backend
-
-Open a terminal in the backend directory:
-
-```bash
-cd backend
-npm install
-```
-
-Create a `.env` file inside the `backend` directory and configure the environment variables required by the application:
+MongoDB Atlas is used to store application data. The backend requires the following environment variables:
 
 ```env
 PORT=5000
@@ -79,47 +72,74 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_strong_random_secret
 ```
 
-Replace the example values with your own configuration. Never commit your actual `.env` file or credentials.
+Configure these variables in the local environment or the deployment platform's environment-variable settings. Never publish database credentials or JWT secrets.
 
-### 3. Start the Backend
+### Frontend
 
-From the `backend` directory, run the start command configured in `backend/package.json`. If no start script exists, you can start the server with:
+The frontend is built with HTML, CSS, and JavaScript. It should be served using a local development server or the configured hosting platform, with its API configuration pointing to the appropriate backend URL.
+
+## Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/mananshsharma/HRGenius.git
+cd HRGenius
+```
+
+### 2. Install backend dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file inside the `backend` directory and add your MongoDB connection string and a strong JWT secret.
+
+### 4. Start the backend
 
 ```bash
 node server.js
 ```
 
-The backend uses port `5000` by default unless another port is configured. When running locally, the root endpoint can be checked at:
+If the application starts successfully, the local backend runs on port `5000` by default.
 
-`http://localhost:5000/`
+Open the following URL to check the backend root endpoint:
 
-### 4. Run the Frontend
+http://localhost:5000/
 
-Open the `frontend` directory and launch the main HTML page using a local development server or the method configured for the project.
+### 5. Launch the frontend
 
-Ensure the frontend API configuration points to the backend URL that is actually running. A deployed frontend cannot reach a backend running only on your personal computer when that computer or server is unavailable.
-
-## Security
-
-- Store database credentials and JWT secrets in environment variables.
-- Do not commit `.env` files, access tokens, passwords, or other secrets.
-- Protected API endpoints require valid JWT authentication.
-- Validate user input and apply appropriate access permissions to sensitive operations.
+Open the `frontend` directory and run its main HTML page using a local development server. Make sure the frontend's API configuration points to the backend you intend to use.
 
 ## Continuous Integration
 
-HRGenius uses GitHub Actions to install backend dependencies and check JavaScript syntax when changes are pushed to the main branch or a pull request targets it.
+HRGenius includes a GitHub Actions workflow for automated backend checks when changes are pushed or pull requests are opened.
 
-[View GitHub Actions](https://github.com/mananshsharma/HRGenius/actions)
+- **Repository:** https://github.com/mananshsharma/HRGenius
+- **GitHub Actions:** https://github.com/mananshsharma/HRGenius/actions
+
+## Security Practices
+
+- Keep database connection strings and JWT secrets in environment variables.
+- Never commit `.env` files or other credentials.
+- Use JWT authentication for protected endpoints.
+- Validate incoming data and apply suitable authorization checks to sensitive operations.
+- Configure database network access carefully.
 
 ## Project Status
 
-HRGenius is a college project with its core HR management workflows implemented and tested by the developer. The frontend is deployed on Vercel, while the backend currently requires local configuration and a running database connection.
+HRGenius has been developed as a functional HRMS college project, with its core HR management workflows implemented and tested locally. The source code is available on GitHub, GitHub Actions is configured for automated checks, and the backend has been deployed to Vercel.
+
+Database-dependent functionality on the deployed backend requires a successful connection to MongoDB Atlas. Deployment and database connectivity are separate checks, so live API functionality should be verified independently.
 
 ## Author
 
 **Manansh Sharma**
 
-- GitHub: [mananshsharma](https://github.com/mananshsharma)
-- LinkedIn: [Manansh Sharma](https://www.linkedin.com/in/mananshsharma)
+- **GitHub:** https://github.com/mananshsharma
+- **LinkedIn:** https://www.linkedin.com/in/mananshsharma
+
 
