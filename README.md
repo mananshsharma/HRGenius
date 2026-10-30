@@ -187,6 +187,18 @@ The source code is available on GitHub, GitHub Actions is configured for automat
 
 The backend's ability to respond to requests and its ability to complete database-dependent operations are separate checks. Authentication, API endpoints, and database operations should be tested in the deployed environment before being considered fully operational.
 
+## Login Instructions
+
+Open the live application.
+
+Enter the demo credentials provided separately by the project developer.
+
+Explore the available HRMS features.
+
+Demo Access: Please contact the project developer to obtain the faculty demo login credentials.
+
+For security, login credentials are not published in this public repository.
+
 ## Author
 
 **Manansh Sharma**
