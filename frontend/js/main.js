@@ -1,8 +1,9 @@
+
 // =========================================
 // HRGENIUS FRONTEND AUTHENTICATION
 // =========================================
 
-const AUTH_API = "http://localhost:5000/api/auth";
+const AUTH_API = "https://hrgenius-backend.vercel.app/api/auth";
 
 
 // =========================================
@@ -12,134 +13,66 @@ const AUTH_API = "http://localhost:5000/api/auth";
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-
     loginForm.addEventListener("submit", async function (event) {
-
         event.preventDefault();
 
-        const email =
-            document.getElementById("email").value.trim();
-
-        const password =
-            document.getElementById("password").value;
-
-        const remember =
-            document.getElementById("remember").checked;
-
-        const loginMessage =
-            document.getElementById("loginMessage");
-
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const remember = document.getElementById("remember").checked;
+        const loginMessage = document.getElementById("loginMessage");
 
         // Basic validation
         if (!email || !password) {
-
-            loginMessage.textContent =
-                "Please enter email and password.";
-
+            loginMessage.textContent = "Please enter email and password.";
             return;
         }
 
-
         // Show loading message
-        loginMessage.textContent =
-            "Logging in...";
-
+        loginMessage.textContent = "Logging in...";
 
         try {
+            const response = await fetch(`${AUTH_API}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
 
-            const response =
-                await fetch(`${AUTH_API}/login`, {
+            const data = await response.json();
 
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        email,
-                        password
-                    })
-
-                });
-
-
-            const data =
-                await response.json();
-
-
-            // Login failed
+            // Handle login failure
             if (!response.ok) {
-
-                loginMessage.textContent =
-                    data.error || "Login failed.";
-
+                loginMessage.textContent = data.error || "Login failed.";
                 return;
             }
 
-
             // Store authentication data
-            if (remember) {
+            const storage = remember ? localStorage : sessionStorage;
 
-                localStorage.setItem(
-                    "hrgeniusToken",
-                    data.token
-                );
+            storage.setItem("hrgeniusToken", data.token);
+            storage.setItem("hrgeniusUser", JSON.stringify(data.user));
 
-                localStorage.setItem(
-                    "hrgeniusUser",
-                    JSON.stringify(data.user)
-                );
+            // Maintain compatibility with existing frontend checks
+            localStorage.setItem("hrgeniusLoggedIn", "true");
 
-            } else {
+            loginMessage.textContent = "Login successful. Opening dashboard...";
 
-                sessionStorage.setItem(
-                    "hrgeniusToken",
-                    data.token
-                );
-
-                sessionStorage.setItem(
-                    "hrgeniusUser",
-                    JSON.stringify(data.user)
-                );
-
-            }
-
-
-            // Keep compatibility with old frontend checks
-            localStorage.setItem(
-                "hrgeniusLoggedIn",
-                "true"
-            );
-
-
-            loginMessage.textContent =
-                "Login successful. Opening dashboard...";
-
-
-            // Redirect
+            // Redirect to dashboard
             setTimeout(() => {
-
-                window.location.href =
-                    "dashboard.html";
-
+                window.location.href = "dashboard.html";
             }, 500);
 
-
         } catch (error) {
-
-            console.error(
-                "Login error:",
-                error
-            );
+            console.error("Login error:", error);
 
             loginMessage.textContent =
                 "Unable to connect to HRGenius server.";
-
         }
-
     });
-
 }
 
 
@@ -148,21 +81,16 @@ if (loginForm) {
 // =========================================
 
 function forgotPassword(event) {
-
     if (event) {
         event.preventDefault();
     }
 
-    const loginMessage =
-        document.getElementById("loginMessage");
+    const loginMessage = document.getElementById("loginMessage");
 
     if (loginMessage) {
-
         loginMessage.textContent =
             "Please contact the HR administrator to reset your password.";
-
     }
-
 }
 
 
@@ -171,7 +99,6 @@ function forgotPassword(event) {
 // =========================================
 
 function logoutUser() {
-
     localStorage.removeItem("hrgeniusToken");
     localStorage.removeItem("hrgeniusUser");
     localStorage.removeItem("hrgeniusLoggedIn");
@@ -179,7 +106,6 @@ function logoutUser() {
     sessionStorage.removeItem("hrgeniusToken");
     sessionStorage.removeItem("hrgeniusUser");
 
-    window.location.href =
-        "index.html";
-
+    window.location.href = "index.html";
 }
+```
